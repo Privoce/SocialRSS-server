@@ -29,6 +29,12 @@ export const REDIS = {
     (isDev || argv.disableCache) && !process.env['ENABLE_CACHE_DEBUG'],
 }
 
+export const MYSQL_DB = {
+  host: '127.0.0.1',
+  username: 'root',
+  password: '',
+  database: 'srss',
+}
 export const AXIOS_CONFIG: AxiosRequestConfig = {
   timeout: 10000,
 }
