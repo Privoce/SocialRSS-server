@@ -12,6 +12,7 @@ import { GuestCheckGuard } from './common/guard/roles.guard'
 import { SkipBrowserDefaultRequestMiddleware } from './common/middlewares/favicon.middleware'
 import { SecurityMiddleware } from './common/middlewares/security.middleware'
 import { AuthModule } from './modules/auth/auth.module'
+import { RssModule } from './modules/rss/rss.module'
 import { UserModule } from './modules/user/user.module'
 import { CacheModule } from './processors/cache/cache.module'
 import { DatabaseModule } from './processors/database/database.module'
@@ -33,6 +34,7 @@ import { DatabaseModule } from './processors/database/database.module'
 
     AuthModule,
     UserModule,
+    RssModule,
   ],
   controllers: [AppController],
   providers: [

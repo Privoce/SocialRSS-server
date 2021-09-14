@@ -71,6 +71,7 @@
     "pluralize": "*",
     "redis": "3.1.2",
     "reflect-metadata": "^0.1.13",
+    "rss-parser": "^3.12.0",
     "rxjs": "^7.3.0",
     "snakecase-keys": "^4.0.2",
     "ts-morph": "*",

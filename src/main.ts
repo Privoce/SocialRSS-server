@@ -1,3 +1,4 @@
+import 'zx/globals'
 import { Logger, ValidationPipe } from '@nestjs/common'
 import { NestFactory } from '@nestjs/core'
 import { NestFastifyApplication } from '@nestjs/platform-fastify'
@@ -9,7 +10,6 @@ import { fastifyApp } from './common/adapt/fastify'
 import { LoggingInterceptor } from './common/interceptors/logging.interceptor'
 import { MyLogger } from './processors/logger/logger.service'
 import { isDev } from './utils/environment.utils'
-
 const PORT: number = +argv.port || 3321
 
 const APIVersion = 1
