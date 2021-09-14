@@ -12,7 +12,7 @@ import { isDev } from './utils/environment.utils'
 
 const PORT: number = +argv.port || 3321
 
-const APIVersion = 2
+const APIVersion = 1
 const Origin = CROSS_DOMAIN.allowedOrigins
 
 declare const module: any

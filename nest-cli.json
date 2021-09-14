@@ -10,7 +10,8 @@
           "introspectComments": true,
           "dtoFileNameSuffix": [
             ".dto.ts",
-            ".model.ts"
+            ".model.ts",
+            ".entity.ts"
           ]
         }
       }

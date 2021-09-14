@@ -6,15 +6,14 @@ export class UserSecureEntity {
   @PrimaryGeneratedColumn({ type: 'bigint' })
   id: string
 
-  @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
+  @Column({ type: 'bigint' })
   @OneToOne((type) => UserEntity, (user) => user.id)
-  @Column({ nullable: false })
   user_id: string
 
   @Column()
   agent: string
 
-  @Column({ nullable: false, length: 16 })
+  @Column({ nullable: false, length: 8 })
   auth_code: string
 
   @Column({ type: 'datetime', nullable: true })
