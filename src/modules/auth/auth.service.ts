@@ -4,6 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm'
 import { compareSync, hashSync } from 'bcrypt'
 import { nanoid } from 'nanoid'
 import { Repository } from 'typeorm'
+import { HASH } from '~/app.config'
 import { UserEntity } from '~/processors/database/entities/user.entity'
 import { UserSecureEntity } from '~/processors/database/entities/user_secure.entity'
 import { UserWithJwt } from '~/shared/interfaces/user-jwt.interface'
@@ -86,7 +87,7 @@ export class AuthService {
     if (isExist) {
       throw new BadRequestException('user already exist.')
     }
-    body.password = hashSync(body.password, 10)
+    body.password = hashSync(body.password, HASH.salt)
     body.created_at = new Date()
     return await this.userModel.save(body)
   }

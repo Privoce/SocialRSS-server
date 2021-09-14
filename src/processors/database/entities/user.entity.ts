@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger'
+import { ApiProperty, PartialType } from '@nestjs/swagger'
 import { IsEmail, IsString } from 'class-validator'
 import { Column, Entity } from 'typeorm'
 import { BaseEntity } from './base.entity'
@@ -33,3 +33,5 @@ export class UserEntity extends BaseEntity {
   @IsEmail()
   email: string
 }
+
+export class UserEntityPartial extends PartialType(UserEntity) {}

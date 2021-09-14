@@ -45,3 +45,7 @@ export const SECURITY = {
   // 跳过登陆鉴权
   skipAuth: argv.skipAuth ?? false,
 }
+
+export const HASH = {
+  salt: 6,
+}
