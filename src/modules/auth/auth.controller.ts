@@ -32,6 +32,7 @@ export class AuthController {
     @Agent() agent: string,
     @IpLocation() { ip }: IpRecord,
   ) {
+    Reflect.deleteProperty(body, 'role')
     const user = await this.authService.createUser(body)
     Reflect.deleteProperty(user, 'password')
     return {

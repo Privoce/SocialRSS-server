@@ -1,5 +1,5 @@
-import { ApiProperty, PartialType } from '@nestjs/swagger'
-import { IsEmail, IsString } from 'class-validator'
+import { ApiHideProperty, ApiProperty, PartialType } from '@nestjs/swagger'
+import { IsEmail, IsOptional, IsString } from 'class-validator'
 import { Column, Entity } from 'typeorm'
 import { BaseEntity } from './base.entity'
 
@@ -12,6 +12,7 @@ export enum UserRole {
 @Entity({ name: 'users' })
 export class UserEntity extends BaseEntity {
   @Column({ default: UserRole.User })
+  @ApiHideProperty()
   role: UserRole
 
   @Column({ unique: true })
@@ -23,6 +24,7 @@ export class UserEntity extends BaseEntity {
 
   @Column({ nullable: true })
   @IsString()
+  @IsOptional()
   bio?: string
 
   @Column({})
@@ -31,6 +33,9 @@ export class UserEntity extends BaseEntity {
 
   @Column({ unique: true })
   @IsEmail()
+  @ApiProperty({
+    example: `${(Math.random() * 100).toString(16).slice(3)}@gmail.com`,
+  })
   email: string
 }
 
