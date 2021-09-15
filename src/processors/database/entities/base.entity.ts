@@ -6,7 +6,7 @@ export class BaseEntity {
   @PrimaryGeneratedColumn({ type: 'bigint' })
   @ApiHideProperty()
   id: string
-  @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
+  @Column({ type: 'datetime', default: () => null })
   @ApiHideProperty()
   created_at: Date
 }
