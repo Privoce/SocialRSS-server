@@ -40,7 +40,7 @@ export const AXIOS_CONFIG: AxiosRequestConfig = {
 }
 
 export const SECURITY = {
-  jwtSecret: argv.jwtSecret || 'asjhczxiucipoiopiqm2376',
+  jwtSecret: argv.jwtSecret || 'sadarqwewczxads12421asdsas',
   jwtExpire: '30d',
   // 跳过登陆鉴权
   skipAuth: argv.skipAuth ?? false,

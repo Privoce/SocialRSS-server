@@ -3,10 +3,10 @@ import { UserEntity } from './user.entity'
 
 @Entity({ name: 'user_secure' })
 export class UserSecureEntity {
-  @PrimaryGeneratedColumn({ type: 'int' })
+  @PrimaryGeneratedColumn({ type: 'bigint' })
   id: string
 
-  @Column({ type: 'int', width: 10 })
+  @Column({ type: 'bigint', width: 10 })
   @OneToOne((type) => UserEntity, (user) => user.id)
   user_id: string
 

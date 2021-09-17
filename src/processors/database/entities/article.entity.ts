@@ -12,6 +12,7 @@ export class ArticleEntity extends BaseEntity {
   link: string
   @Column({ type: 'datetime', nullable: true })
   updated_at?: Date
+  @Column()
   @OneToMany((type) => SiteEntity, (site) => site.id)
   site_id: string
 }

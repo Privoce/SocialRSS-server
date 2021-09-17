@@ -37,7 +37,7 @@ export class UserService {
     const newPassword = hashSync(new$, HASH.salt)
 
     // then remove all login record
-    this.connection.transaction(async () => {
+    await this.connection.transaction(async () => {
       await Promise.all([
         this.connection
           .createQueryBuilder()

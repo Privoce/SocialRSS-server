@@ -16,7 +16,7 @@ export class SiteEntity extends BaseEntity {
   @IsUrl({ require_protocol: true })
   image?: string
 
-  @Column({ type: 'varchar', length: 255, nullable: false })
+  @Column({ type: 'varchar', length: 255, nullable: false, unique: true })
   @IsUrl({ require_protocol: true })
   link: string
 }

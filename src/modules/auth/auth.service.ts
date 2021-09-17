@@ -61,7 +61,10 @@ export class AuthService {
     return token
   }
   async verifyPayload(payload: JwtPayload) {
-    const user = await this.userModel.findOne(payload.id)
+    const user = await this.userModel.findOne({
+      where: { id: payload.id },
+    })
+
     if (!user) {
       return false
     }
