@@ -11,27 +11,27 @@ export enum UserRole {
 }
 @Entity({ name: 'users' })
 export class UserEntity extends BaseEntity {
-  @Column({ default: UserRole.User })
+  @Column({ default: UserRole.User, width: 5 })
   @ApiHideProperty()
   role: UserRole
 
-  @Column({ unique: true })
+  @Column({ unique: true, length: 32 })
   @IsString()
   @ApiProperty({
     example: 'innei',
   })
   name: string
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, length: 150 })
   @IsString()
   @IsOptional()
   bio?: string
 
-  @Column({})
+  @Column({ length: 64 })
   @IsString()
   password: string
 
-  @Column({ unique: true })
+  @Column({ unique: true, length: 150 })
   @IsEmail()
   @ApiProperty({
     example: `${(Math.random() * 100).toString(16).slice(3)}@gmail.com`,

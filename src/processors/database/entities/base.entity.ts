@@ -3,10 +3,10 @@ import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
 
 @Entity()
 export class BaseEntity {
-  @PrimaryGeneratedColumn({ type: 'bigint' })
+  @PrimaryGeneratedColumn({ type: 'int' })
   @ApiHideProperty()
   id: string
-  @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
+  @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' }) // 需要新版 SQL 支持
   @ApiHideProperty()
   created_at: Date
 }

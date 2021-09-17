@@ -5,18 +5,18 @@ import { UserEntity } from './user.entity'
 
 @Entity({ name: 'user_subscription' })
 export class UserSubscriptionEntity extends BaseEntity {
-  @Column({ nullable: true, type: 'bigint' })
+  @Column({ nullable: true, type: 'int' })
   @OneToOne((type) => SiteEntity, (site) => site.id)
   site_id?: string // ! <- 先弄它
 
-  @Column({ nullable: true, type: 'bigint' })
+  @Column({ nullable: true, type: 'int' })
   srss_id?: string // 先放一边
 
-  @Column({ nullable: true, type: 'bigint' })
+  @Column({ nullable: true, type: 'int' })
   //TODO
   email_id?: string // 先放一边
 
-  @Column({ nullable: false, type: 'bigint' })
+  @Column({ nullable: false, type: 'int' })
   @OneToOne((type) => UserEntity, (user) => user.id)
   user_id: string
 }
