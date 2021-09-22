@@ -43,7 +43,8 @@ export const SECURITY = {
   jwtSecret: argv.jwtSecret || 'sadarqwewczxads12421asdsas',
   jwtExpire: '30d',
   // 跳过登陆鉴权
-  skipAuth: argv.skipAuth ?? false,
+  // skipAuth: argv.skipAuth ?? false,
+  skipAuth: isDev,
 }
 
 export const HASH = {

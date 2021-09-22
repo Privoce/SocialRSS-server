@@ -27,29 +27,92 @@ export class RssService {
     const parser = new RssParser()
     const data = await parser.parseString(xml)
     // storage to db
-    await this.connection.transaction(async () => {
-      // TODO update db
-      const { id } = await this.siteEntity.save({
-        created_at: data.lastBuildDate || new Date(),
-        desc: data.description,
-        link: isURL(data.link, { require_protocol: true }) ? data.link : url,
-        title: data.title,
-      })
-
-      await Promise.all(
-        data.items.map((item) => {
-          return this.articleEntity.insert({
-            title: item.title,
-            content: item.content ?? item.contentSnippet,
-            created_at: new Date(item.pubDate) || new Date(item.isoDate),
-            link: item.link,
-            updated_at: new Date(item.isoDate),
-            site_id: id,
-          })
-        }),
-      )
-    })
-
+    await this.saveOrUpdateDb(data, url)
     return data
+  }
+
+  async saveOrUpdateDb(
+    data: {
+      [key: string]: any
+    } & RssParser.Output<{
+      [key: string]: any
+    }>,
+    url: string,
+  ) {
+    await this.connection.transaction(async () => {
+      const isExist = await this.siteEntity.findOne({ link: url })
+      if (isExist) {
+        const siteId = isExist.id
+        // TODO update db
+        await this.connection
+          .createQueryBuilder()
+          .update(SiteEntity)
+          .set({
+            desc: data.description,
+            title: data.title,
+            updated_at: new Date(),
+          })
+          .where('link = :link', { link: url })
+          .execute()
+
+        // 先加入新的
+        // 看一下哪些的是新的
+
+        for (const item of data.items) {
+          const isExist = await this.articleEntity.findOne({
+            link: item.link,
+          })
+          if (!isExist) {
+            await this.articleEntity.insert({
+              title: item.title,
+              content: item.content ?? item.contentSnippet,
+              created_at: new Date(item.pubDate) || new Date(item.isoDate),
+              link: item.link,
+              updated_at: new Date(item.isoDate),
+              site_id: siteId,
+            })
+          }
+        }
+
+        // 更新原来的
+        await Promise.all(
+          data.items.map((item) => {
+            this.connection
+              .createQueryBuilder()
+              .update(ArticleEntity)
+              .set({
+                title: item.title,
+                content: item.content ?? item.contentSnippet,
+                updated_at: new Date(item.isoDate),
+              })
+              .where('site_id = :site_id and link = :link', {
+                site_id: siteId,
+                link: item.link,
+              })
+              .execute()
+          }),
+        )
+      } else {
+        const { id } = await this.siteEntity.save({
+          created_at: data.lastBuildDate || new Date(),
+          desc: data.description,
+          link: isURL(data.link, { require_protocol: true }) ? data.link : url,
+          title: data.title,
+        })
+
+        await Promise.all(
+          data.items.map((item) => {
+            return this.articleEntity.insert({
+              title: item.title,
+              content: item.content ?? item.contentSnippet,
+              created_at: new Date(item.pubDate) || new Date(item.isoDate),
+              link: item.link,
+              updated_at: new Date(item.isoDate),
+              site_id: id,
+            })
+          }),
+        )
+      }
+    })
   }
 }

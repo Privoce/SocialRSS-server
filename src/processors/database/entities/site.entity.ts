@@ -19,4 +19,7 @@ export class SiteEntity extends BaseEntity {
   @Column({ type: 'varchar', length: 255, nullable: false, unique: true })
   @IsUrl({ require_protocol: true })
   link: string
+
+  @Column({ type: 'datetime', nullable: true })
+  updated_at?: Date
 }
