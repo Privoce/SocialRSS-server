@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  app:
+    container_name: srss-server
+    image: innei/srss-server:0.1.0
+    restart: 'on-failure'
+    ports:
+      - '3321:3321'
+    depends_on:
+      - db
+      - redis
+    links:
+      - db
+      - redis
+    networks:
+      - app-network
+
+  db:
+    container_name: mysql
+    image: mysql:8
+    restart: always
+    volumes:
+      - ./mysql/data:/var/lib/mysql
+      - ./mysql/config:/etc/mysql/conf.d
+    ports:
+      - '3344:3306'
+    expose:
+      # Opens port 3306 on the container
+      - '3306'
+    environment:
+      TZ: Asia/Shanghai
+      MYSQL_DATABASE: srss
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'true'
+    networks:
+      - app-network
+
+  redis:
+    image: redis
+    container_name: redis
+
+    ports:
+      - '3333:6379'
+    networks:
+      - app-network
+networks:
+  app-network:
+    driver: bridge

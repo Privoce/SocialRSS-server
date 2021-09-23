@@ -1,7 +1,7 @@
 import type { AxiosRequestConfig } from 'axios'
-import { argv } from 'yargs'
+import yargs from 'yargs'
 import { isDev } from './utils/environment.utils'
-
+const argv = yargs.argv as any
 console.log(argv)
 
 export const CROSS_DOMAIN = {
@@ -30,10 +30,10 @@ export const REDIS = {
 }
 
 export const MYSQL_DB = {
-  host: '127.0.0.1',
-  username: 'root',
-  password: '',
-  database: 'srss',
+  host: argv.db_host || '127.0.0.1',
+  username: argv.db_username || 'root',
+  password: argv.db_password || '',
+  database: argv.database || 'srss',
 }
 export const AXIOS_CONFIG: AxiosRequestConfig = {
   timeout: 10000,
