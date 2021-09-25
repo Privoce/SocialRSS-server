@@ -7,6 +7,18 @@
 3. 修改 `src/app.config.ts` 文件调整数据库连接信息
 4. 执行 `pnpm install` 安装依赖，`pnpm start:dev` 运行开发模式
 
+
+## Docker 部署
+
+
+```bash
+cd
+mkdir -p srss/server
+cd srss/server
+wget https://cdn.jsdelivr.net/gh/Privoce/SocialRSS-server@master/docker-compose.yml
+docker-compose up -d
+```
+
 ## 作者
 
 @Innei & @Dreamer-Paul
