@@ -3,7 +3,7 @@ version: '3.8'
 services:
   app:
     container_name: srss-server
-    image: innei/srss-server:0.1.0
+    image: innei/srss-server:latest
     restart: 'on-failure'
     ports:
       - '3321:3321'
