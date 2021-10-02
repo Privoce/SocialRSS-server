@@ -48,7 +48,6 @@ async function bootstrap() {
     }),
   )
 
-  if (isDev) {
     const options = new DocumentBuilder()
       .setTitle('API')
       .setDescription('The blog API description')
@@ -61,7 +60,6 @@ async function bootstrap() {
       .build()
     const document = SwaggerModule.createDocument(app, options)
     SwaggerModule.setup('api-docs', app, document)
-  }
 
   await app.listen(PORT, '0.0.0.0', () => {
     if (isDev) {
