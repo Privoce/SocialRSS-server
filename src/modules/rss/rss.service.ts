@@ -18,11 +18,21 @@ export class RssService {
   ) {}
 
   async dispatchRss(url: string) {
-    const xml = await fetch(url)
+    const controller = new AbortController()
+    const id = setTimeout(() => {
+      controller.abort()
+    }, 8000)
+
+    const xml = await fetch(url, {
+      signal: controller.signal,
+    })
       .then((res) => res.text())
-      .catch((err) => {})
+      .catch((err) => {
+        console.log(err)
+      })
+    clearTimeout(id)
     if (!xml) {
-      throw new BadRequestException('RSS not found')
+      throw new BadRequestException('RSS not found or timeout')
     }
     const parser = new RssParser()
     const data = await parser.parseString(xml)
@@ -65,7 +75,7 @@ export class RssService {
           if (!isExist) {
             await this.articleEntity.insert({
               title: item.title,
-              content: item.content ?? item.contentSnippet,
+              content: item.content ?? item.contentSnippet ?? item.summary,
               created_at: new Date(item.pubDate) || new Date(item.isoDate),
               link: item.link,
               updated_at: new Date(item.isoDate),
@@ -82,7 +92,7 @@ export class RssService {
               .update(ArticleEntity)
               .set({
                 title: item.title,
-                content: item.content ?? item.contentSnippet,
+                content: item.content ?? item.contentSnippet ?? item.summary,
                 updated_at: new Date(item.isoDate),
               })
               .where('site_id = :site_id and link = :link', {
@@ -104,7 +114,7 @@ export class RssService {
           data.items.map((item) => {
             return this.articleEntity.insert({
               title: item.title,
-              content: item.content ?? item.contentSnippet,
+              content: item.content ?? item.contentSnippet ?? item.summary,
               created_at: new Date(item.pubDate) || new Date(item.isoDate),
               link: item.link,
               updated_at: new Date(item.isoDate),
