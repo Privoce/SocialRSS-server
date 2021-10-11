@@ -18,6 +18,7 @@ import { SiteModule } from './modules/site/site.module'
 import { UserModule } from './modules/user/user.module'
 import { CacheModule } from './processors/cache/cache.module'
 import { DatabaseModule } from './processors/database/database.module'
+import { HelperModule } from './processors/helper/helper.module'
 
 @Module({
   imports: [
@@ -39,6 +40,8 @@ import { DatabaseModule } from './processors/database/database.module'
     RssModule,
     SiteModule,
     ArticleModule,
+
+    HelperModule,
   ],
   controllers: [AppController],
   providers: [
