@@ -1,5 +1,5 @@
 {
-  "name": "srss",
+  "name": "srss-api",
   "version": "0.0.3",
   "description": "",
   "author": "Innei <https://innei.ren>",
@@ -39,7 +39,6 @@
   },
   "dependencies": {
     "@nestjs/common": "8.0.6",
-    "@nestjs/config": "^1.0.1",
     "@nestjs/core": "8.0.6",
     "@nestjs/jwt": "^8.0.0",
     "@nestjs/mapped-types": "*",

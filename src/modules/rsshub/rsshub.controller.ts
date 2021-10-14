@@ -1,9 +1,11 @@
 import { Controller, Get, Header, Query } from '@nestjs/common'
 import { ApiProperty } from '@nestjs/swagger'
+import { ApiName } from '~/common/decorator/openapi.decorator'
 import { RSSHubQueryDto } from './rsshub.dto'
 import { RSSHubService } from './rsshub.service'
 
 @Controller('rsshub')
+@ApiName
 export class RSSHubController {
   constructor(private readonly rsshubService: RSSHubService) {}
 

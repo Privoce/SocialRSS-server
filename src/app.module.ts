@@ -4,7 +4,6 @@ import {
   NestModule,
   RequestMethod,
 } from '@nestjs/common'
-import { ConfigModule } from '@nestjs/config'
 import { APP_FILTER, APP_GUARD } from '@nestjs/core'
 import { AppController } from './app.controller'
 import { AllExceptionsFilter } from './common/filters/any-exception.filter'
@@ -16,6 +15,7 @@ import { AuthModule } from './modules/auth/auth.module'
 import { RSSModule } from './modules/rss/rss.module'
 import { RSSHubModule } from './modules/rsshub/rsshub.module'
 import { SiteModule } from './modules/site/site.module'
+import { SubscriptionModule } from './modules/subscription/subscription.module'
 import { UserModule } from './modules/user/user.module'
 import { CacheModule } from './processors/cache/cache.module'
 import { DatabaseModule } from './processors/database/database.module'
@@ -23,16 +23,6 @@ import { HelperModule } from './processors/helper/helper.module'
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      envFilePath: [
-        '.env.development.local',
-        '.env.development',
-        '.env.production.local',
-        '.env.production',
-        '.env',
-      ],
-      isGlobal: true,
-    }),
     DatabaseModule,
     CacheModule,
 
@@ -42,6 +32,7 @@ import { HelperModule } from './processors/helper/helper.module'
     RSSHubModule,
     SiteModule,
     ArticleModule,
+    SubscriptionModule,
 
     HelperModule,
   ],
