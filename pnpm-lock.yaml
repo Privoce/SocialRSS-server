@@ -62,12 +62,14 @@ specifiers:
   prettier: ^2.3.2
   redis: 3.1.2
   reflect-metadata: ^0.1.13
+  retry-axios: 2.6.0
   rimraf: ^3.0.2
   rss-parser: ^3.12.0
   run-script-webpack-plugin: ^0.0.11
   rxjs: ^7.3.0
   snakecase-keys: ^4.0.2
   socket.io: '*'
+  socks-proxy-agent: 6.1.0
   supertest: ^6.1.6
   ts-jest: ^27.0.5
   ts-loader: ^9.2.5
@@ -116,6 +118,7 @@ dependencies:
   pluralize: 8.0.0
   redis: 3.1.2
   reflect-metadata: 0.1.13
+  retry-axios: 2.6.0_axios@0.21.4
   rss-parser: 3.12.0
   rxjs: 7.3.0
   snakecase-keys: 4.0.2
@@ -154,6 +157,7 @@ devDependencies:
   rimraf: 3.0.2
   run-script-webpack-plugin: 0.0.11
   socket.io: 4.2.0
+  socks-proxy-agent: 6.1.0
   supertest: 6.1.6
   ts-jest: 27.0.5_d6279bcaf6e2c6aa91a58343d133ee67
   ts-loader: 9.2.5_typescript@4.4.2+webpack@5.52.1
@@ -3856,6 +3860,10 @@ packages:
     transitivePeerDependencies:
       - supports-color
 
+  /ip/1.1.5:
+    resolution: {integrity: sha1-vd7XARQpCCjAoDnnLvJfWq7ENUo=}
+    dev: true
+
   /ipaddr.js/1.9.1:
     resolution: {integrity: sha512-0KI/607xoxSToH7GjN1FfSbLoU0+btTicjsQSWQlh/hZykN8KpmMf7uYwPW3R+akZ6R/w18ZlXSHBYXiYUPO3g==}
     engines: {node: '>= 0.10'}
@@ -5838,6 +5846,15 @@ packages:
     resolution: {integrity: sha512-M0b3YWQs7R3Z917WRQy1HHA7Ba7D8hvZg6UE5mLykJxQVE2ju0IXbGlaHPPlkY+WN7wFP+wUMXmBFA0aV6vYGQ==}
     engines: {node: '>=4'}
 
+  /retry-axios/2.6.0_axios@0.21.4:
+    resolution: {integrity: sha512-pOLi+Gdll3JekwuFjXO3fTq+L9lzMQGcSq7M5gIjExcl3Gu1hd4XXuf5o3+LuSBsaULQH7DiNbsqPd1chVpQGQ==}
+    engines: {node: '>=10.7.0'}
+    peerDependencies:
+      axios: '*'
+    dependencies:
+      axios: 0.21.4
+    dev: false
+
   /reusify/1.0.4:
     resolution: {integrity: sha512-U9nH88a3fc/ekCF1l0/UP1IosiuIjyTh7hBvXVMHYgVcfGvt897Xguj2UOLDeI5BG2m7/uwyaLVT6fbtCwTyzw==}
     engines: {iojs: '>=1.0.0', node: '>=0.10.0'}
@@ -6066,6 +6083,11 @@ packages:
       is-fullwidth-code-point: 3.0.0
     dev: true
 
+  /smart-buffer/4.2.0:
+    resolution: {integrity: sha512-94hK0Hh8rPqQl2xXc3HsaBoOXKV20MToPkcXvwbISWLEs+64sBq5kFgn2kJDHb1Pry9yrP0dxrCI9RRci7RXKg==}
+    engines: {node: '>= 6.0.0', npm: '>= 3.0.0'}
+    dev: true
+
   /snake-case/3.0.4:
     resolution: {integrity: sha512-LAOh4z89bGQvl9pFfNF8V146i7o7/CqFPbqzYgP+yYzDIDeS9HaNFtXABamRW+AQzEVODcvE79ljJ+8a9YSdMg==}
     dependencies:
@@ -6130,6 +6152,25 @@ packages:
       - bufferutil
       - supports-color
       - utf-8-validate
+    dev: true
+
+  /socks-proxy-agent/6.1.0:
+    resolution: {integrity: sha512-57e7lwCN4Tzt3mXz25VxOErJKXlPfXmkMLnk310v/jwW20jWRVcgsOit+xNkN3eIEdB47GwnfAEBLacZ/wVIKg==}
+    engines: {node: '>= 10'}
+    dependencies:
+      agent-base: 6.0.2
+      debug: 4.3.2
+      socks: 2.6.1
+    transitivePeerDependencies:
+      - supports-color
+    dev: true
+
+  /socks/2.6.1:
+    resolution: {integrity: sha512-kLQ9N5ucj8uIcxrDwjm0Jsqk06xdpBjGNQtpXy4Q8/QY2k+fY7nZH8CARy+hkbG+SGAovmzzuauCpBlb8FrnBA==}
+    engines: {node: '>= 10.13.0', npm: '>= 3.0.0'}
+    dependencies:
+      ip: 1.1.5
+      smart-buffer: 4.2.0
     dev: true
 
   /sonic-boom/1.4.1:

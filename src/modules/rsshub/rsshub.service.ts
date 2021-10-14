@@ -5,13 +5,15 @@ import { HttpService } from '~/processors/helper/helper.axios'
 export class RSSHubService {
   constructor(private readonly httpService: HttpService) {}
 
-  private readonly rsshubEndpoint = 'https://rsshub.app/'
+  private readonly rsshubEndpoint = 'https://rsshub.app'
 
   async getRSSFromRSSHub(url: string) {
     //TODO
-    return await this.httpService.$axios.request({
-      method: 'get',
-      url: this.rsshubEndpoint + url,
-    })
+    return await this.httpService.$axios
+      .request<any>({
+        method: 'get',
+        url: this.rsshubEndpoint + url,
+      })
+      .then((data) => data.data)
   }
 }

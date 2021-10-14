@@ -8,7 +8,7 @@ import { ArticleEntity } from '~/processors/database/entities/article.entity'
 import { SiteEntity } from '~/processors/database/entities/site.entity'
 
 @Injectable()
-export class RssService {
+export class RSSService {
   constructor(
     private readonly connection: Connection,
     @InjectRepository(SiteEntity)
@@ -17,7 +17,7 @@ export class RssService {
     private readonly articleEntity: Repository<ArticleEntity>,
   ) {}
 
-  async dispatchRss(url: string) {
+  async dispatchRSS(url: string) {
     const controller = new AbortController()
     const id = setTimeout(() => {
       controller.abort()

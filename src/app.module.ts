@@ -13,7 +13,8 @@ import { SkipBrowserDefaultRequestMiddleware } from './common/middlewares/favico
 import { SecurityMiddleware } from './common/middlewares/security.middleware'
 import { ArticleModule } from './modules/article/article.module'
 import { AuthModule } from './modules/auth/auth.module'
-import { RssModule } from './modules/rss/rss.module'
+import { RSSModule } from './modules/rss/rss.module'
+import { RSSHubModule } from './modules/rsshub/rsshub.module'
 import { SiteModule } from './modules/site/site.module'
 import { UserModule } from './modules/user/user.module'
 import { CacheModule } from './processors/cache/cache.module'
@@ -37,7 +38,8 @@ import { HelperModule } from './processors/helper/helper.module'
 
     AuthModule,
     UserModule,
-    RssModule,
+    RSSModule,
+    RSSHubModule,
     SiteModule,
     ArticleModule,
 
