@@ -5,6 +5,11 @@ import {
   Injectable,
 } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
+import {
+  IPaginationOptions,
+  paginate,
+  Pagination,
+} from 'nestjs-typeorm-paginate'
 import { Repository } from 'typeorm'
 import { SiteEntity } from '~/processors/database/entities/site.entity'
 import { ArticleService } from '../article/article.service'
@@ -25,6 +30,10 @@ export class SiteService {
 
   public get dao() {
     return this.siteRepo
+  }
+
+  async paginate(options: IPaginationOptions): Promise<Pagination<SiteEntity>> {
+    return paginate<SiteEntity>(this.dao, options)
   }
 
   async getAllArticlesBySiteId(siteId: string) {

@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common'
+import { Controller, Get, Post } from '@nestjs/common'
 import { Auth } from '~/common/decorator/auth.decorator'
 import { CurrentUser } from '~/common/decorator/current-user.decorator'
 import { ApiName } from '~/common/decorator/openapi.decorator'
@@ -14,5 +14,11 @@ export class SubscriptionController {
   @Get('/@me')
   async getMySubscription(@CurrentUser() user: UserEntity) {
     return this.subscriptionService.getUserSubscriptions(user.id)
+  }
+
+  @Auth()
+  @Post('/website/:id')
+  async subscriptionWebsite() {
+    //TODO
   }
 }

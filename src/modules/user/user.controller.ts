@@ -1,4 +1,5 @@
 import { Body, Controller, Get, Patch, Post } from '@nestjs/common'
+import { ApiProperty } from '@nestjs/swagger'
 import { Auth } from '~/common/decorator/auth.decorator'
 import { CurrentUser } from '~/common/decorator/current-user.decorator'
 import { ApiName } from '~/common/decorator/openapi.decorator'
@@ -16,6 +17,9 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Patch('/')
+  @ApiProperty({
+    description: '更新用户信息',
+  })
   async updateMe(
     @Body() body: UserEntityPartial,
     @CurrentUser() user: UserEntity,
@@ -37,6 +41,9 @@ export class UserController {
   }
 
   @Get('/flushall')
+  @ApiProperty({
+    description: '登出所有设备',
+  })
   async logoutall(@CurrentUser() user: UserEntity) {
     await this.userService.logoutAll(user.id)
   }

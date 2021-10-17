@@ -4,10 +4,12 @@ import {
   NestModule,
   RequestMethod,
 } from '@nestjs/common'
-import { APP_FILTER, APP_GUARD } from '@nestjs/core'
+import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core'
 import { AppController } from './app.controller'
 import { AllExceptionsFilter } from './common/filters/any-exception.filter'
 import { GuestCheckGuard } from './common/guard/roles.guard'
+import { JSONSerializeInterceptor } from './common/interceptors/json-serialize.interceptor'
+import { ResponseInterceptor } from './common/interceptors/response.interceptor'
 import { SkipBrowserDefaultRequestMiddleware } from './common/middlewares/favicon.middleware'
 import { SecurityMiddleware } from './common/middlewares/security.middleware'
 import { ArticleModule } from './modules/article/article.module'
@@ -46,6 +48,14 @@ import { HelperModule } from './processors/helper/helper.module'
     {
       provide: APP_FILTER,
       useClass: AllExceptionsFilter,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: JSONSerializeInterceptor,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: ResponseInterceptor,
     },
   ],
 })

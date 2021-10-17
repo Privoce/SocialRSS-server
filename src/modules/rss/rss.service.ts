@@ -67,18 +67,20 @@ export class RSSService {
 
         // 先加入新的
         // 看一下哪些的是新的
-
         for (const item of data.items) {
           const isExist = await this.articleEntity.findOne({
             link: item.link,
           })
+          const { content, description } = this.parseContentFromItem(item)
           if (!isExist) {
             await this.articleEntity.insert({
               title: item.title,
-              content: item.content ?? item.contentSnippet ?? item.summary,
-              created_at: new Date(item.pubDate) || new Date(item.isoDate),
+              content,
+              description,
+              created_at:
+                new Date(item.pubDate) || new Date(item.isoDate) || new Date(),
               link: item.link,
-              updated_at: new Date(item.isoDate),
+              updated_at: new Date(item.isoDate) || new Date(),
               site_id: siteId,
             })
           }
@@ -87,13 +89,15 @@ export class RSSService {
         // 更新原来的
         await Promise.all(
           data.items.map((item) => {
+            const { content, description } = this.parseContentFromItem(item)
             this.connection
               .createQueryBuilder()
               .update(ArticleEntity)
               .set({
                 title: item.title,
-                content: item.content ?? item.contentSnippet ?? item.summary,
-                updated_at: new Date(item.isoDate),
+                content,
+                description,
+                updated_at: new Date(item.isoDate) || new Date(),
               })
               .where('site_id = :site_id and link = :link', {
                 site_id: siteId,
@@ -112,17 +116,32 @@ export class RSSService {
 
         await Promise.all(
           data.items.map((item) => {
+            const { content, description } = this.parseContentFromItem(item)
             return this.articleEntity.insert({
               title: item.title,
-              content: item.content ?? item.contentSnippet ?? item.summary,
-              created_at: new Date(item.pubDate) || new Date(item.isoDate),
+              content,
+              description,
+              created_at:
+                new Date(item.pubDate) || new Date(item.isoDate) || new Date(),
               link: item.link,
-              updated_at: new Date(item.isoDate),
+              updated_at: new Date(item.isoDate) || new Date(),
               site_id: id,
             })
           }),
         )
       }
     })
+  }
+
+  private parseContentFromItem(item: { [key: string]: any } & RssParser.Item) {
+    const _description = item.description
+    const content = item.content ?? item.contentSnippet ?? item.summary
+    const description =
+      _description == content
+        ? (_description?.length > 50
+            ? _description?.slice(0, 50)
+            : _description) || ''
+        : _description
+    return { content, description }
   }
 }

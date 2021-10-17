@@ -6,7 +6,9 @@ import { SiteEntity } from './site.entity'
 export class ArticleEntity extends BaseEntity {
   @Column({ type: 'tinytext' })
   title: string
-  @Column({ type: 'longtext' })
+  @Column({ type: 'text' })
+  description: string
+  @Column({ type: 'mediumtext' })
   content: string
   @Column()
   link: string

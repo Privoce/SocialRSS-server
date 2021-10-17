@@ -8,7 +8,6 @@ specifiers:
   '@innei-util/prettier': latest
   '@nestjs/cli': 8.1.1
   '@nestjs/common': 8.0.6
-  '@nestjs/config': ^1.0.1
   '@nestjs/core': 8.0.6
   '@nestjs/jwt': ^8.0.0
   '@nestjs/mapped-types': '*'
@@ -55,6 +54,7 @@ specifiers:
   mkdirp: '*'
   mysql2: ^2.3.0
   nanoid: ^3.1.25
+  nestjs-typeorm-paginate: 3.1.3
   nodemailer: ^6.6.3
   passport: ^0.4.1
   passport-jwt: ^4.0.0
@@ -86,7 +86,6 @@ specifiers:
 
 dependencies:
   '@nestjs/common': 8.0.6_4d0c20d2c2a765e9ff99ebac79ad2484
-  '@nestjs/config': 1.0.1_e2399148d990aa1f9a4b6ba2ac7a5b74
   '@nestjs/core': 8.0.6_214ebf00327c8ed1d6618d61764e6a91
   '@nestjs/jwt': 8.0.0_@nestjs+common@8.0.6
   '@nestjs/mapped-types': 1.0.0_98ff46db2ce9f8b87e20a19aa1e55592
@@ -112,6 +111,7 @@ dependencies:
   mkdirp: 1.0.4
   mysql2: 2.3.0
   nanoid: 3.1.25
+  nestjs-typeorm-paginate: 3.1.3_a748b956ee7a60570bbfdad52cb80653
   nodemailer: 6.6.3
   passport: 0.4.1
   passport-jwt: 4.0.0
@@ -931,24 +931,6 @@ packages:
       uuid: 8.3.2
     transitivePeerDependencies:
       - debug
-    dev: false
-
-  /@nestjs/config/1.0.1_e2399148d990aa1f9a4b6ba2ac7a5b74:
-    resolution: {integrity: sha512-azMl4uYlFIhYsywFxPJT81RxF3Pnn0TZW3EEmr0Wa0Wex8R2xpvBNrCcrOgW3TB1xGMP7eqBrlfsVh5ZP82szg==}
-    peerDependencies:
-      '@nestjs/common': ^7.0.0 || ^8.0.0
-      reflect-metadata: ^0.1.13
-      rxjs: ^6.0.0 || ^7.2.0
-    dependencies:
-      '@nestjs/common': 8.0.6_4d0c20d2c2a765e9ff99ebac79ad2484
-      dotenv: 10.0.0
-      dotenv-expand: 5.1.0
-      lodash.get: 4.4.2
-      lodash.has: 4.5.2
-      lodash.set: 4.3.2
-      reflect-metadata: 0.1.13
-      rxjs: 7.3.0
-      uuid: 8.3.2
     dev: false
 
   /@nestjs/core/8.0.6_214ebf00327c8ed1d6618d61764e6a91:
@@ -2717,10 +2699,6 @@ packages:
     dependencies:
       no-case: 3.0.4
       tslib: 2.3.1
-    dev: false
-
-  /dotenv-expand/5.1.0:
-    resolution: {integrity: sha512-YXQl1DSa4/PQyRfgrv6aoNjhasp/p4qs9FjJ4q4cQk+8m4r6k4ZSiEyytKG8f8W9gi8WsQtIObNmKd+tMzNTmA==}
     dev: false
 
   /dotenv/10.0.0:
@@ -4838,14 +4816,6 @@ packages:
   /lodash.flatten/4.4.0:
     resolution: {integrity: sha1-8xwiIlqWMtK7+OSt2+8kCqdlph8=}
 
-  /lodash.get/4.4.2:
-    resolution: {integrity: sha1-LRd/ZS+jHpObRDjVNBSZ36OCXpk=}
-    dev: false
-
-  /lodash.has/4.5.2:
-    resolution: {integrity: sha1-0Z9NwQlQWMzL4rDN9O4P5Ko3yGI=}
-    dev: false
-
   /lodash.includes/4.3.0:
     resolution: {integrity: sha1-YLuYqHy5I8aMoeUTJUgzFISfVT8=}
     dev: false
@@ -4879,10 +4849,6 @@ packages:
 
   /lodash.once/4.1.1:
     resolution: {integrity: sha1-DdOXEhPHxW34gJd9UEyI+0cal6w=}
-    dev: false
-
-  /lodash.set/4.3.2:
-    resolution: {integrity: sha1-2HV7HagH3eJIFrDWqEvqGnYjCyM=}
     dev: false
 
   /lodash.toarray/4.4.0:
@@ -5125,6 +5091,18 @@ packages:
   /neo-async/2.6.2:
     resolution: {integrity: sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==}
     dev: true
+
+  /nestjs-typeorm-paginate/3.1.3_a748b956ee7a60570bbfdad52cb80653:
+    resolution: {integrity: sha512-7iXNnO9hUe1IbJfUeVU6lH0fTEvmPPRvySIKphhEFE39VF1rz0ptd/0pec7pDs6oI9vFQlsdtiH39TNaL4Gf9Q==}
+    requiresBuild: true
+    peerDependencies:
+      '@nestjs/common': ^6.1.1 || ^5.6.2 || ^7.0.0 || ^8.0.0
+      typeorm: ^0.2.12
+    dependencies:
+      '@nestjs/common': 8.0.6_4d0c20d2c2a765e9ff99ebac79ad2484
+      chalk: 4.1.2
+      typeorm: 0.2.37_813acdff498c6caf11e40af661f25748
+    dev: false
 
   /no-case/3.0.4:
     resolution: {integrity: sha512-fgAN3jGAh+RoxUGZHTSOLJIqUc2wmoBwGR4tbpNAKmmovFoWq0OdRkb0VkldReO2a2iBT/OEulG9XSUc10r3zg==}
