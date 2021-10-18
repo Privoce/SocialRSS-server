@@ -36,15 +36,28 @@ export class SiteService {
     return paginate<SiteEntity>(this.dao, options)
   }
 
-  async getAllArticlesBySiteId(siteId: string) {
+  async getSiteDetailAndTopArticle(siteId: string) {
     const site = await this.siteRepo.findOne(siteId)
     if (!site) {
       throw new BadRequestException('site not found')
     }
-    return await this.articleService.dao.find({
-      where: { site_id: siteId },
-      order: { created_at: 'DESC' },
-    })
+
+    const [top5, articleCount, summary] = await Promise.all([
+      this.articleService.dao.find({
+        where: { site_id: siteId },
+        order: { created_at: 'DESC' },
+        take: 5,
+      }),
+      this.articleService.dao.count({
+        where: { site_id: siteId },
+      }),
+      this.articleService.dao.find({
+        where: { site_id: siteId },
+        select: ['id', 'title', 'created_at'],
+      }),
+    ])
+
+    return { ...site, top: top5, articleCount, summary }
   }
 
   async starSite(siteId: string, userId: string) {

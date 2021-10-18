@@ -1,5 +1,5 @@
-import { Controller, Get, Header, Query } from '@nestjs/common'
-import { ApiProperty } from '@nestjs/swagger'
+import { CacheTTL, Controller, Get, Header, Query } from '@nestjs/common'
+import { ApiOperation } from '@nestjs/swagger'
 import { ApiName } from '~/common/decorator/openapi.decorator'
 import { RSSHubQueryDto } from './rsshub.dto'
 import { RSSHubService } from './rsshub.service'
@@ -10,10 +10,12 @@ export class RSSHubController {
   constructor(private readonly rsshubService: RSSHubService) {}
 
   @Get('/')
-  @ApiProperty({ description: '从 RSSHub 获取' })
+  @ApiOperation({
+    summary: '从 RSSHub 获取',
+  })
   @Header('Cache-Control', 'public, max-age=600')
-  @Header('Content-Type', 'text/xml')
+  @CacheTTL(60)
   async getRSSFromRSSHub(@Query() query: RSSHubQueryDto) {
-    return await this.rsshubService.getRSSFromRSSHub(query.url)
+    return this.rsshubService.getRSSFromRSSHub(query.url)
   }
 }

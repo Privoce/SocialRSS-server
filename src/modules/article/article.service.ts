@@ -13,4 +13,8 @@ export class ArticleService {
   public get dao() {
     return this.articleRepository
   }
+
+  public async findById(id: string) {
+    return this.dao.findOne(id)
+  }
 }

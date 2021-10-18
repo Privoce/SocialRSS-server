@@ -1,5 +1,5 @@
-import { Controller, Get, Param, Patch, Query } from '@nestjs/common'
-import { ApiProperty } from '@nestjs/swagger'
+import { Controller, Delete, Get, Param, Patch, Query } from '@nestjs/common'
+import { ApiOperation } from '@nestjs/swagger'
 import { Auth } from '~/common/decorator/auth.decorator'
 import { CurrentUser } from '~/common/decorator/current-user.decorator'
 import { HTTPDecorators } from '~/common/decorator/http.decorator'
@@ -15,8 +15,8 @@ export class SiteController {
   constructor(private readonly siteService: SiteService) {}
 
   @Get('/')
-  @ApiProperty({
-    description: '列出所有站点分页',
+  @ApiOperation({
+    summary: '列出所有站点分页',
   })
   @HTTPDecorators.Paginator
   async getList(@Query() query: PaginateDto) {
@@ -25,16 +25,29 @@ export class SiteController {
   }
 
   @Get('/:id')
+  @ApiOperation({
+    summary: '获取站点信息',
+    description: 'Top5, 总数',
+  })
   async getRssListBySiteId(@Param() params: IdDto) {
     const { id } = params
-    return this.siteService.getAllArticlesBySiteId(id)
+    return this.siteService.getSiteDetailAndTopArticle(id)
   }
 
   @Patch('/star/:id')
+  @ApiOperation({
+    summary: 'Star 一个站点',
+  })
   @Auth()
   async starSite(@Param() params: IdDto, @CurrentUser() user: UserEntity) {
     const { id } = params
     await this.siteService.starSite(id, user.id)
     return
+  }
+
+  @Delete('/:id')
+  @Auth()
+  async deleteSite(@Param() param: IdDto) {
+    // TODO
   }
 }

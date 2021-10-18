@@ -17,6 +17,13 @@ export class HttpService {
 
   constructor() {
     this.#instance = axios.create(this.axiosBaseOptions)
+
+    this.#instance.interceptors.response.use(
+      (req) => req,
+      (err) => {
+        console.log(err.message)
+      },
+    )
     attach(this.#instance)
 
     this.#instance.defaults.raxConfig = {

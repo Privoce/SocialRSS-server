@@ -1,6 +1,7 @@
 import { IsString, IsUrl } from 'class-validator'
-import { Column, Entity } from 'typeorm'
+import { Column, Entity, OneToOne } from 'typeorm'
 import { BaseEntity } from './base.entity'
+import { UserEntity } from './user.entity'
 
 @Entity({ name: 'sites' })
 export class SiteEntity extends BaseEntity {
@@ -22,4 +23,9 @@ export class SiteEntity extends BaseEntity {
 
   @Column({ type: 'datetime', nullable: true })
   updated_at?: Date
+
+  // user id
+  @OneToOne((type) => UserEntity, (user) => user.id)
+  @Column({ type: 'bigint', nullable: false })
+  owner_id: string
 }

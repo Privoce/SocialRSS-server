@@ -1,4 +1,5 @@
-import { Module } from '@nestjs/common'
+import { forwardRef, Module } from '@nestjs/common'
+import { RSSModule } from '../rss/rss.module'
 import { RSSHubController } from './rsshub.controller'
 import { RSSHubService } from './rsshub.service'
 
@@ -6,5 +7,6 @@ import { RSSHubService } from './rsshub.service'
   controllers: [RSSHubController],
   exports: [RSSHubService],
   providers: [RSSHubService],
+  imports: [forwardRef(() => RSSModule)],
 })
 export class RSSHubModule {}

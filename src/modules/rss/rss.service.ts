@@ -6,6 +6,7 @@ import RssParser from 'rss-parser'
 import { Connection, Repository } from 'typeorm'
 import { ArticleEntity } from '~/processors/database/entities/article.entity'
 import { SiteEntity } from '~/processors/database/entities/site.entity'
+import { HttpService } from '~/processors/helper/helper.axios'
 
 @Injectable()
 export class RSSService {
@@ -15,29 +16,20 @@ export class RSSService {
     private readonly siteEntity: Repository<SiteEntity>,
     @InjectRepository(ArticleEntity)
     private readonly articleEntity: Repository<ArticleEntity>,
+
+    private readonly httpService: HttpService,
   ) {}
 
-  async dispatchRSS(url: string) {
-    const controller = new AbortController()
-    const id = setTimeout(() => {
-      controller.abort()
-    }, 8000)
+  async dispatchRSS(url: string, ownerId: string) {
+    const xml = await this.httpService.$axios.get(url).then((data) => data.data)
 
-    const xml = await fetch(url, {
-      signal: controller.signal,
-    })
-      .then((res) => res.text())
-      .catch((err) => {
-        console.log(err)
-      })
-    clearTimeout(id)
     if (!xml) {
       throw new BadRequestException('RSS not found or timeout')
     }
     const parser = new RssParser()
     const data = await parser.parseString(xml)
     // storage to db
-    await this.saveOrUpdateDb(data, url)
+    await this.saveOrUpdateDb(data, url, ownerId)
     return data
   }
 
@@ -48,6 +40,8 @@ export class RSSService {
       [key: string]: any
     }>,
     url: string,
+
+    ownerId?: string,
   ) {
     await this.connection.transaction(async () => {
       const isExist = await this.siteEntity.findOne({ link: url })
@@ -71,16 +65,11 @@ export class RSSService {
           const isExist = await this.articleEntity.findOne({
             link: item.link,
           })
-          const { content, description } = this.parseContentFromItem(item)
+
           if (!isExist) {
+            const data = this.transformParsedItem(item)
             await this.articleEntity.insert({
-              title: item.title,
-              content,
-              description,
-              created_at:
-                new Date(item.pubDate) || new Date(item.isoDate) || new Date(),
-              link: item.link,
-              updated_at: new Date(item.isoDate) || new Date(),
+              ...data,
               site_id: siteId,
             })
           }
@@ -112,19 +101,15 @@ export class RSSService {
           desc: data.description,
           link: isURL(data.link, { require_protocol: true }) ? data.link : url,
           title: data.title,
+          owner_id: ownerId,
         })
 
         await Promise.all(
           data.items.map((item) => {
-            const { content, description } = this.parseContentFromItem(item)
+            const data = this.transformParsedItem(item)
+
             return this.articleEntity.insert({
-              title: item.title,
-              content,
-              description,
-              created_at:
-                new Date(item.pubDate) || new Date(item.isoDate) || new Date(),
-              link: item.link,
-              updated_at: new Date(item.isoDate) || new Date(),
+              ...data,
               site_id: id,
             })
           }),
@@ -143,5 +128,18 @@ export class RSSService {
             : _description) || ''
         : _description
     return { content, description }
+  }
+
+  public transformParsedItem(item: { [key: string]: any } & RssParser.Item) {
+    const { content, description } = this.parseContentFromItem(item)
+    return {
+      title: item.title,
+      content,
+      description,
+      created_at:
+        new Date(item.pubDate) || new Date(item.isoDate) || new Date(),
+      link: item.link,
+      updated_at: new Date(item.isoDate) || new Date(),
+    }
   }
 }
