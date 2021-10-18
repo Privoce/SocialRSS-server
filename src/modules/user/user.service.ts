@@ -37,15 +37,15 @@ export class UserService {
     const newPassword = hashSync(new$, HASH.salt)
 
     // then remove all login record
-    await this.connection.transaction(async () => {
+    await this.connection.transaction(async (manager) => {
       await Promise.all([
-        this.connection
+        manager
           .createQueryBuilder()
           .delete()
           .from(UserSecureEntity)
           .where('user_id = :id', { id })
           .execute(),
-        this.connection
+        manager
           .createQueryBuilder()
           .update(UserEntity)
           .set({

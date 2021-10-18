@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ForbiddenException,
   forwardRef,
   Inject,
   Injectable,
@@ -10,10 +11,13 @@ import {
   paginate,
   Pagination,
 } from 'nestjs-typeorm-paginate'
-import { Repository } from 'typeorm'
+import { Connection, Repository } from 'typeorm'
+import { ArticleEntity } from '~/processors/database/entities/article.entity'
 import { SiteEntity } from '~/processors/database/entities/site.entity'
+import { UserRole } from '~/processors/database/entities/user.entity'
 import { ArticleService } from '../article/article.service'
 import { SubscriptionService } from '../subscription/subscription.service'
+import { UserService } from '../user/user.service'
 
 @Injectable()
 export class SiteService {
@@ -26,6 +30,11 @@ export class SiteService {
 
     @Inject(forwardRef(() => SubscriptionService))
     private readonly subscriptionService: SubscriptionService,
+
+    @Inject(forwardRef(() => UserService))
+    private readonly userService: UserService,
+
+    private readonly connection: Connection,
   ) {}
 
   public get dao() {
@@ -62,5 +71,29 @@ export class SiteService {
 
   async starSite(siteId: string, userId: string) {
     return this.subscriptionService.subscribe(userId, 'site', siteId)
+  }
+
+  async deleteSite(siteId: string, ownerId: string) {
+    const user = await this.userService.dao.findOne(ownerId)
+
+    if (!user) {
+      throw new BadRequestException('user not found')
+    }
+
+    const site = await this.siteRepo.findOne(siteId)
+    if (!site) {
+      throw new BadRequestException('site not found')
+    }
+    if (
+      site.owner_id !== ownerId &&
+      ![UserRole.Admin, UserRole.SuperAdmin, UserRole.Root].includes(user.role)
+    ) {
+      throw new ForbiddenException('no permission to delete')
+    }
+
+    this.connection.transaction(async (manager) => {
+      await manager.softDelete(ArticleEntity, { site_id: siteId })
+      await manager.softDelete(SiteEntity, { id: siteId })
+    })
   }
 }

@@ -47,7 +47,10 @@ export class SiteController {
 
   @Delete('/:id')
   @Auth()
-  async deleteSite(@Param() param: IdDto) {
-    // TODO
+  async deleteSite(@Param() param: IdDto, @CurrentUser() user: UserEntity) {
+    const { id } = param
+
+    await this.siteService.deleteSite(id, user.id)
+    return
   }
 }

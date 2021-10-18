@@ -2,6 +2,7 @@ import {
   applyDecorators,
   CallHandler,
   ExecutionContext,
+  InternalServerErrorException,
   NestInterceptor,
   UseGuards,
   UseInterceptors,
@@ -18,7 +19,7 @@ export function Auth() {
   if (!SECURITY.skipAuth) {
     decorators.push(UseGuards(JWTAuthGuard))
   } else {
-    // fake test user
+    // fake test user, attach top 1 user into request
 
     class AttachUser implements NestInterceptor {
       constructor(
@@ -29,8 +30,10 @@ export function Auth() {
         const request = context.switchToHttp().getRequest()
         if (!request.user) {
           const user = await this.userRepo.findOne()
+          if (!user) {
+            throw new InternalServerErrorException('no user found')
+          }
           request.user = user
-          console.log(user)
         }
 
         return next.handle()

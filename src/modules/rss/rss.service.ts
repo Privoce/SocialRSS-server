@@ -43,12 +43,12 @@ export class RSSService {
 
     ownerId?: string,
   ) {
-    await this.connection.transaction(async () => {
+    await this.connection.transaction(async (manager) => {
       const isExist = await this.siteEntity.findOne({ link: url })
       if (isExist) {
         const siteId = isExist.id
-        // TODO update db
-        await this.connection
+
+        await manager
           .createQueryBuilder()
           .update(SiteEntity)
           .set({
@@ -79,7 +79,7 @@ export class RSSService {
         await Promise.all(
           data.items.map((item) => {
             const { content, description } = this.parseContentFromItem(item)
-            this.connection
+            manager
               .createQueryBuilder()
               .update(ArticleEntity)
               .set({
