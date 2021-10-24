@@ -5,6 +5,7 @@ import { CurrentUser } from '~/common/decorator/current-user.decorator'
 import { ApiName } from '~/common/decorator/openapi.decorator'
 import { UserEntity } from '~/processors/database/entities/user.entity'
 import { IdDto } from '~/shared/dto/id.dto'
+import { SubscriptionParamDto, SubscriptionType } from './subscription.dto'
 import { SubscriptionService } from './subscription.service'
 
 @Controller('/subscription')
@@ -18,6 +19,16 @@ export class SubscriptionController {
     return this.subscriptionService.getUserSubscriptions(user.id)
   }
 
+  @Get('/:type/:ids')
+  async getTypeOfSubscription(@Param() param: SubscriptionParamDto) {
+    const { ids, type } = param
+    return Promise.all(
+      ids.map((id) => {
+        return this.subscriptionService.getTypeOfSubscription(type, id)
+      }),
+    )
+  }
+
   @Auth()
   @Post('/website/:id')
   @ApiProperty({
@@ -29,6 +40,10 @@ export class SubscriptionController {
   ) {
     const { id } = param
 
-    return this.subscriptionService.subscribe(user.id, 'site', id)
+    return this.subscriptionService.subscribe(
+      user.id,
+      SubscriptionType.Website,
+      id,
+    )
   }
 }

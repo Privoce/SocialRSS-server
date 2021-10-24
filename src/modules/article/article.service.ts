@@ -10,11 +10,11 @@ export class ArticleService {
     private readonly articleRepository: Repository<ArticleEntity>,
   ) {}
 
-  public get dao() {
+  public get repo() {
     return this.articleRepository
   }
 
   public async findById(id: string) {
-    return this.dao.findOne(id)
+    return this.repo.findOne(id)
   }
 }

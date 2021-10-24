@@ -16,6 +16,7 @@ import { ArticleEntity } from '~/processors/database/entities/article.entity'
 import { SiteEntity } from '~/processors/database/entities/site.entity'
 import { UserRole } from '~/processors/database/entities/user.entity'
 import { ArticleService } from '../article/article.service'
+import { SubscriptionType } from '../subscription/subscription.dto'
 import { SubscriptionService } from '../subscription/subscription.service'
 import { UserService } from '../user/user.service'
 
@@ -37,12 +38,12 @@ export class SiteService {
     private readonly connection: Connection,
   ) {}
 
-  public get dao() {
+  public get repo() {
     return this.siteRepo
   }
 
   async paginate(options: IPaginationOptions): Promise<Pagination<SiteEntity>> {
-    return paginate<SiteEntity>(this.dao, options)
+    return paginate<SiteEntity>(this.repo, options)
   }
 
   async getSiteDetailAndTopArticle(siteId: string) {
@@ -52,15 +53,15 @@ export class SiteService {
     }
 
     const [top5, articleCount, summary] = await Promise.all([
-      this.articleService.dao.find({
+      this.articleService.repo.find({
         where: { site_id: siteId },
         order: { created_at: 'DESC' },
         take: 5,
       }),
-      this.articleService.dao.count({
+      this.articleService.repo.count({
         where: { site_id: siteId },
       }),
-      this.articleService.dao.find({
+      this.articleService.repo.find({
         where: { site_id: siteId },
         select: ['id', 'title', 'created_at'],
       }),
@@ -70,7 +71,11 @@ export class SiteService {
   }
 
   async starSite(siteId: string, userId: string) {
-    return this.subscriptionService.subscribe(userId, 'site', siteId)
+    return this.subscriptionService.subscribe(
+      userId,
+      SubscriptionType.Website,
+      siteId,
+    )
   }
 
   async deleteSite(siteId: string, ownerId: string) {

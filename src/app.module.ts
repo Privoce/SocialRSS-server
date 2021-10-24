@@ -10,6 +10,7 @@ import { AllExceptionsFilter } from './common/filters/any-exception.filter'
 import { GuestCheckGuard } from './common/guard/roles.guard'
 import { HttpCacheInterceptor } from './common/interceptors/cache.interceptor'
 import { JSONSerializeInterceptor } from './common/interceptors/json-serialize.interceptor'
+import { QueryRelativeInterceptor } from './common/interceptors/query-relative.interceptor'
 import { ResponseInterceptor } from './common/interceptors/response.interceptor'
 import { SkipBrowserDefaultRequestMiddleware } from './common/middlewares/favicon.middleware'
 import { SecurityMiddleware } from './common/middlewares/security.middleware'
@@ -57,6 +58,10 @@ import { HelperModule } from './processors/helper/helper.module'
     {
       provide: APP_INTERCEPTOR,
       useClass: JSONSerializeInterceptor,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: QueryRelativeInterceptor,
     },
     {
       provide: APP_INTERCEPTOR,

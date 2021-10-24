@@ -3,8 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm'
 import { Connection, Repository } from 'typeorm'
 import { UserEntity } from '~/processors/database/entities/user.entity'
 import { UserSubscriptionEntity } from '~/processors/database/entities/user_subscription.entity'
-
-export type SubscriptionType = 'site' | 'email' | 'srss'
+import { SubscriptionType } from './subscription.dto'
 
 @Injectable()
 export class SubscriptionService {
@@ -17,6 +16,28 @@ export class SubscriptionService {
 
     private readonly connection: Connection,
   ) {}
+
+  get repo() {
+    return this.userSubscriptionRepository
+  }
+
+  private typeToField(type: SubscriptionType) {
+    return {
+      [SubscriptionType.Website]: 'site_id',
+      [SubscriptionType.RSS]: 'srss_id',
+      [SubscriptionType.Article]: 'article_id',
+      [SubscriptionType.Email]: 'email_id',
+    }[type]
+  }
+
+  async getTypeOfSubscription(type: SubscriptionType, id: string) {
+    // this.connection.manager.createQueryBuilder()
+    return this.repo.find({
+      where: {
+        [this.typeToField(type)]: id,
+      },
+    })
+  }
 
   async getUserSubscriptions(userId: string) {
     const user = await this.userRepository.findOne(userId)
