@@ -31,12 +31,25 @@ export class SubscriptionService {
   }
 
   async getTypeOfSubscription(type: SubscriptionType, id: string) {
-    // this.connection.manager.createQueryBuilder()
-    return this.repo.find({
+    const entries = await this.repo.find({
       where: {
         [this.typeToField(type)]: id,
       },
     })
+    // TODO  objects builder
+    // TODO extract to a function
+    const objects = {} as any
+    objects.users = {}
+    await Promise.all(
+      entries.map(async (entry) => {
+        objects.users[entry.user_id] = await this.connection
+          .getRepository(UserEntity)
+          .findOne(entry.user_id, {
+            select: ['created_at', 'bio', 'name', 'id'],
+          })
+      }),
+    )
+    return [entries, objects] as const
   }
 
   async getUserSubscriptions(userId: string) {
@@ -46,12 +59,23 @@ export class SubscriptionService {
       throw new BadRequestException('user not found')
     }
 
-    return await this.userSubscriptionRepository.find({
-      where: {
-        user_id: user.id,
-      },
-      select: ['created_at', 'email_id', 'site_id', 'srss_id'],
-    })
+    return await this.userSubscriptionRepository
+      .find({
+        where: {
+          user_id: user.id,
+        },
+        select: ['created_at', 'email_id', 'site_id', 'srss_id', 'article_id'],
+      })
+      .then((list) => {
+        list.forEach((item) => {
+          Object.keys(item).forEach((key) => {
+            if (Object.prototype.toString.call(item[key]) === '[object Null]') {
+              delete item[key]
+            }
+          })
+        })
+        return list
+      })
   }
 
   async subscribe(
@@ -64,13 +88,7 @@ export class SubscriptionService {
     if (!user) {
       throw new BadRequestException('user not found')
     }
-
-    const typeToField = {
-      site: 'site_id',
-      email: 'email_id',
-      srss: 'srss_id',
-    }[type]
-
+    const typeToField = this.typeToField(type)
     const subscription = await this.userSubscriptionRepository.findOne({
       where: {
         user_id: user.id,

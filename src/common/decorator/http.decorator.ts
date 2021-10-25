@@ -29,9 +29,16 @@ export const Bypass: MethodDecorator = (
  * {
  *  data: [
  *    {
- *    user
+ *    user: '1'
  *    }
  *  ]
+ * }
+ *
+ *
+ * {
+ *  data: {
+ *   user: ['1']
+ *   }
  * }
  * ```
  *
@@ -39,10 +46,15 @@ export const Bypass: MethodDecorator = (
  * @param field
  * @returns
  */
+type Type = string
+type FieldName = string
+type Field = [FieldName, Type]
 export const QueryRelative =
-  (field: string) =>
+  (structure: Field[], isArray = false) =>
   (target: any, propertyKey: string, descriptor: PropertyDescriptor) => {
-    SetMetadata(HTTP_ATTACH_QUERY_RELATIVE, { field })(descriptor.value)
+    SetMetadata(HTTP_ATTACH_QUERY_RELATIVE, { structure, isArray })(
+      descriptor.value,
+    )
   }
 
 export declare interface FileDecoratorProps {
@@ -52,4 +64,5 @@ export declare interface FileDecoratorProps {
 export const HTTPDecorators = {
   Paginator,
   Bypass,
+  QueryRelative,
 }

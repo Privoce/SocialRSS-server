@@ -7,7 +7,7 @@ export enum SubscriptionType {
   RSS = 'srss',
   Article = 'article',
 }
-export class SubscriptionParamDto {
+export class SubscriptionParamIdsDto {
   @IsEnum(SubscriptionType)
   type: SubscriptionType
 
@@ -16,4 +16,12 @@ export class SubscriptionParamDto {
     return value.split(',')
   })
   ids: string[]
+}
+
+export class SubscriptionParamIdDto {
+  @IsEnum(SubscriptionType)
+  type: SubscriptionType
+
+  @Matches(/\d*/)
+  id: string
 }

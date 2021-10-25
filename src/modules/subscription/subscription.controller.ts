@@ -1,11 +1,13 @@
 import { Controller, Get, Param, Post } from '@nestjs/common'
-import { ApiProperty } from '@nestjs/swagger'
+import { ApiOperation } from '@nestjs/swagger'
 import { Auth } from '~/common/decorator/auth.decorator'
 import { CurrentUser } from '~/common/decorator/current-user.decorator'
 import { ApiName } from '~/common/decorator/openapi.decorator'
 import { UserEntity } from '~/processors/database/entities/user.entity'
-import { IdDto } from '~/shared/dto/id.dto'
-import { SubscriptionParamDto, SubscriptionType } from './subscription.dto'
+import {
+  SubscriptionParamIdDto,
+  SubscriptionParamIdsDto,
+} from './subscription.dto'
 import { SubscriptionService } from './subscription.service'
 
 @Controller('/subscription')
@@ -15,35 +17,44 @@ export class SubscriptionController {
 
   @Auth()
   @Get('/@me')
+  @ApiOperation({ summary: '获取自己所有的订阅' })
   async getMySubscription(@CurrentUser() user: UserEntity) {
     return this.subscriptionService.getUserSubscriptions(user.id)
   }
 
   @Get('/:type/:ids')
-  async getTypeOfSubscription(@Param() param: SubscriptionParamDto) {
+  @ApiOperation({ summary: '获取某种类型的订阅列表' })
+  // @HTTPDecorators.QueryRelative([['user_id', 'users']], true)
+  async getTypeOfSubscription(@Param() param: SubscriptionParamIdsDto) {
     const { ids, type } = param
-    return Promise.all(
-      ids.map((id) => {
-        return this.subscriptionService.getTypeOfSubscription(type, id)
-      }),
-    )
+
+    const entitiesMap = {}
+    const objects = { users: {} }
+    for (const id of ids) {
+      const [entries, _objects] =
+        await this.subscriptionService.getTypeOfSubscription(type, id)
+
+      entitiesMap[id] = entries
+      objects.users = { ...objects.users, ..._objects.users }
+    }
+    // TODO
+    return {
+      data: { entities: entitiesMap, type },
+      objects,
+    }
   }
 
   @Auth()
-  @Post('/website/:id')
-  @ApiProperty({
-    description: '订阅一个站点, 目前和 /sites/star/ 功能一样',
+  @Post('/:type/:id')
+  @ApiOperation({
+    summary: '订阅一个站点/文章/etc.',
   })
   async subscriptionWebsite(
     @CurrentUser() user: UserEntity,
-    @Param() param: IdDto,
+    @Param() param: SubscriptionParamIdDto,
   ) {
-    const { id } = param
+    const { id, type } = param
 
-    return this.subscriptionService.subscribe(
-      user.id,
-      SubscriptionType.Website,
-      id,
-    )
+    return this.subscriptionService.subscribe(user.id, type, id)
   }
 }
